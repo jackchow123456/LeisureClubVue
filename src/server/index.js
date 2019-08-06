@@ -14,11 +14,15 @@ export default {
     ),
 
     // 获取投票结果
-    getVoteResult: ($id) => axios.get('entry/application/vote'),
+    GetVoteResult: ($id) => axios.get('entry/application/vote'),
 
     // 用户登录
-    Login: ($data) => axios.post('login',
-        $data
-    ),
+    Login: ($data) => axios.post('login',$data),
+
+    // 发送验证码
+    SendSms: ($data) => axios.post('auth/sendSms',$data),
+
+    // 注册
+    Register: ($data) => axios.post('register',$data)
 
 }

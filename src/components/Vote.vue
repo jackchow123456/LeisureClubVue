@@ -43,7 +43,7 @@
 
                 var that = this;
 
-                server.getVoteResult().then(function (response) {
+                server.GetVoteResult().then(function (response) {
                     var $data = response.data
                     that.value1 = $data.data.count.vote_1
                     that.value2 = $data.data.count.vote_2
@@ -68,8 +68,11 @@
             },
             open: function () {
                 console.log("socket连接成功")
-                // let str = '["vote","{\\"id\\":1,\\"num\\":123}"]';
-                // console.log(JSON.parse(str));
+                // let str = '["vote","{\\"id\\":1,\\"num\\":1}"]';
+                // let data = JSON.parse(str);
+                // console.log(data[0] == 'vote');
+                // let result = JSON.parse(data[1]);
+                // console.log(result)
             },
             error: function () {
                 console.log("连接错误")

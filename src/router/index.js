@@ -9,6 +9,7 @@ import Vote from '../components/Vote'
 Vue.use(VueRouter)
 
 const routes = [
+  { path: '/', component: Home},
   { path: '/home', component: Home},
   { path: '/login', component: Login},
   { path: '/register', component: Register},
