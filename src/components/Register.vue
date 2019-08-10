@@ -5,7 +5,12 @@
       <el-input placeholder="请输入你的手机号码" v-model="phone"></el-input>
       <div>
         <el-input placeholder="获取验证码" v-model="code">
-          <el-button slot="append" @click="sendSms" :disabled="disabled">{{btnTitle}}</el-button>
+          <el-button
+            slot="append"
+            @click="sendSms"
+            :disabled="disabled"
+            :loading="false"
+          >{{btnTitle}}</el-button>
         </el-input>
       </div>
     </div>
@@ -38,7 +43,8 @@ export default {
       password_confirmation: "",
       btnTitle: "获取验证码",
       disabled: false,
-      isSend: false
+      isSend: false,
+      loading: false
     };
   },
   mounted() {},
@@ -49,22 +55,27 @@ export default {
     // 发送验证码
     sendSms: function() {
       if (this.validatePhone()) {
-        this.validateBtn();
         this.isSend = true;
         let $data = { mobile: this.phone, scenes: "register" };
+        this.btnTitle = "发送中...";
+        this.loading = true;
+        this.disabled = true;
         var that = this;
         server
           .SendSms($data)
           .then(function(response) {
             var $data = response.data;
             if ($data.data.success) {
+              that.loading = false;
               that.$message.success("发送验证码成功");
-            } else {
-              that.$message.error("网络异常");
+              that.validateBtn();
             }
           })
-          .catch(function(error, data) {
-            that.$message.error("网络异常");
+          .catch(function(error) {
+            that.loading = false;
+            that.disabled = false;
+            that.btnTitle = "获取验证码";
+            that.$message.error(error.response.data.message);
           });
       }
     },
@@ -90,12 +101,10 @@ export default {
             var $data = response.data;
             if ($data.code == 200) {
               that.step = 2;
-            } else {
-              that.$message.error("网络异常");
             }
           })
           .catch(function(error, data) {
-            that.$message.error("网络异常");
+            that.$message.error(error.response.data.message);
           });
       }
 
@@ -119,12 +128,10 @@ export default {
                 "bearer " + $data.data.access_token;
               that.$store.commit("setUserInfo", $data.data.user);
               that.$router.push("/home");
-            } else {
-              that.$message.error("网络异常");
             }
           })
           .catch(function(error, data) {
-            that.$message.error("网络异常");
+            that.$message.error(error.response.data.message);
           });
       }
     },
@@ -142,14 +149,16 @@ export default {
     },
     validateBtn() {
       //倒计时
-      let time = 60;
+      let time = 5;
+      this.btnTitle = time + "秒后重试";
+      this.disabled = true;
       let timer = setInterval(() => {
-        if (time == 0) {
+        if (time - 1 == 0) {
           clearInterval(timer);
           this.disabled = false;
           this.btnTitle = "获取验证码";
         } else {
-          this.btnTitle = time + "秒后重试";
+          this.btnTitle = time - 1 + "秒后重试";
           this.disabled = true;
           time--;
         }

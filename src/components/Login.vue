@@ -10,6 +10,9 @@
       </router-link>
       <el-button type="primary" @click="login">登录</el-button>
     </div>
+    <router-link to="/reset">
+      <el-button type="text" @click="dialogVisible = true">忘记密码?</el-button>
+    </router-link>
   </div>
 </template>
 
