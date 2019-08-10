@@ -2,12 +2,12 @@ import server from '../server'
 
 export default {
     login: function ($data, vue) {
-
+        var that = vue;
         if ($data.name == '' || $data.password == '') {
-            vue.$message.error('账号/密码不能为空');
+            that.$message.error('账号/密码不能为空');
             return
         }
-        var that = this;
+
         server.Login($data).then(function (response) {
             var $data = response.data
             if ($data.code == 200) {
@@ -19,7 +19,7 @@ export default {
             } else {
                 that.$message.error('登录失败，账号或者密码错误');
             }
-        }).catch(function (error, data) {
+        }).catch(function () { 
             that.$message.error('登录失败，账号或者密码错误');
         });
     }

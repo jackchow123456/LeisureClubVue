@@ -45,7 +45,6 @@ export default {
         // 监听socket消息
         this.socket.onmessage = this.getMessage;
       }
-      this.$store.commit("test");
 
       var that = this;
       // 获取投票结果
@@ -66,15 +65,13 @@ export default {
 
       server
         .Vote($id)
-        .then(function(response) {
-          var $data = response.data;
-        })
+        .then(function() {})
         .catch(function(error) {
           that.$message.error(error.response.data.message);
         });
     },
     open: function() {
-      console.log("socket连接成功");
+      // console.log("socket连接成功");
       // let str = '["vote","{\\"id\\":1,\\"num\\":1}"]';
       // let data = JSON.parse(str);
       // console.log(data[0] == 'vote');
@@ -82,10 +79,10 @@ export default {
       // console.log(result)
     },
     error: function() {
-      console.log("连接错误");
+      // console.log("连接错误");
     },
     getMessage: function(msg) {
-      console.log("收到服务器信息" + msg.data);
+      // console.log("收到服务器信息" + msg.data);
       let index = msg.data.indexOf("[");
       if (index > 0) {
         try {
@@ -102,11 +99,10 @@ export default {
       }
     },
     send: function(params) {
-      let data = {};
       this.socket.send(params);
     },
     close: function() {
-      console.log("socket已经关闭");
+      // console.log("socket已经关闭");
     }
   }
 };
