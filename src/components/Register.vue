@@ -2,12 +2,12 @@
   <div class="content">
     用户注册
     <div v-show="step == 1">
-    <el-input placeholder="请输入你的手机号码" v-model="phone"></el-input>
-    <div>
-      <el-input placeholder="获取验证码" v-model="code">
-        <el-button slot="append" @click="sendSms" :disabled="disabled">{{btnTitle}}</el-button>
-      </el-input>
-    </div>
+      <el-input placeholder="请输入你的手机号码" v-model="phone"></el-input>
+      <div>
+        <el-input placeholder="获取验证码" v-model="code">
+          <el-button slot="append" @click="sendSms" :disabled="disabled">{{btnTitle}}</el-button>
+        </el-input>
+      </div>
     </div>
 
     <div v-show="step == 2">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import server from '../server'
+import server from "../server";
 export default {
   data() {
     return {
@@ -36,9 +36,9 @@ export default {
       username: "",
       password: "",
       password_confirmation: "",
-      btnTitle : "获取验证码",
-      disabled : false,
-      isSend : false
+      btnTitle: "获取验证码",
+      disabled: false,
+      isSend: false
     };
   },
   mounted() {},
@@ -49,75 +49,93 @@ export default {
     // 发送验证码
     sendSms: function() {
       if (this.validatePhone()) {
-        this.validateBtn()
-        this.isSend = true
+        this.validateBtn();
+        this.isSend = true;
+        let $data = { mobile: this.phone, scenes: "register" };
+        var that = this;
+        server
+          .SendSms($data)
+          .then(function(response) {
+            var $data = response.data;
+            if ($data.data.success) {
+              that.$message.success("发送验证码成功");
+            } else {
+              that.$message.error("网络异常");
+            }
+          })
+          .catch(function(error, data) {
+            that.$message.error("网络异常");
+          });
       }
-      let $data = {'mobile':this.phone,'scenes':'register'}
-      var that = this;
-      server.SendSms($data).then(function (response) {
-          var $data = response.data
-          if ($data.data.success) {
-              that.$message.success('发送验证码成功');
-          }else{
-              that.$message.error('网络异常');
-          }
-      }).catch(function (error,data) {
-          that.$message.error('网络异常');
-      });
-
     },
 
     // 注册步骤
-    register : function(){
-      if(!this.isSend){
+    register: function() {
+      if (!this.isSend) {
         this.$message.error("请先获取验证码");
-        return
+        return;
       }
-      
+
       var that = this;
-      if(this.step == 1){
-        let $data = {'mobile':this.phone,'scenes':'register','code':this.code,'step':this.step}
-        server.Register($data).then(function (response) {
-          var $data = response.data
-          if ($data.code == 200) {
-              that.step = 2
-          }else{
-              that.$message.error('网络异常');
-          }
-        }).catch(function (error,data) {
-            that.$message.error('网络异常');
-        });
+      if (this.step == 1) {
+        let $data = {
+          mobile: this.phone,
+          scenes: "register",
+          code: this.code,
+          step: this.step
+        };
+        server
+          .Register($data)
+          .then(function(response) {
+            var $data = response.data;
+            if ($data.code == 200) {
+              that.step = 2;
+            } else {
+              that.$message.error("网络异常");
+            }
+          })
+          .catch(function(error, data) {
+            that.$message.error("网络异常");
+          });
       }
 
-      if(this.step == 2){
-        let $data = {'mobile':this.phone,'scenes':'register','name':this.username,'step':this.step,'password':this.password,'password_confirmation':this.password_confirmation}
-        server.Register($data).then(function (response) {
-          var $data = response.data
-          if ($data.code == 200) {
-              that.$message.success('注册成功');
-              sessionStorage.setItem('authToken',$data.data.access_token)
-              that.$axios.defaults.headers.common['Authorization'] = 'bearer '+ $data.data.access_token
-              that.$store.commit('setUserInfo', $data.data.user);
-              that.$router.push('/home')
-          }else{
-              that.$message.error('网络异常');
-          }
-        }).catch(function (error,data) {
-            that.$message.error('网络异常');
-        });
+      if (this.step == 2) {
+        let $data = {
+          mobile: this.phone,
+          scenes: "register",
+          name: this.username,
+          step: this.step,
+          password: this.password,
+          password_confirmation: this.password_confirmation
+        };
+        server
+          .Register($data)
+          .then(function(response) {
+            var $data = response.data;
+            if ($data.code == 200) {
+              that.$message.success("注册成功");
+              sessionStorage.setItem("authToken", $data.data.access_token);
+              that.$axios.defaults.headers.common["Authorization"] =
+                "bearer " + $data.data.access_token;
+              that.$store.commit("setUserInfo", $data.data.user);
+              that.$router.push("/home");
+            } else {
+              that.$message.error("网络异常");
+            }
+          })
+          .catch(function(error, data) {
+            that.$message.error("网络异常");
+          });
       }
-      
-
-
     },
     validatePhone() {
       //判断输入的手机号是否合法
       if (!this.phone) {
         this.$message.error("手机号码不能为空");
-        // return false
+        return false;
       } else if (!/^1[345678]\d{9}$/.test(this.phone)) {
         this.$message.error("请输入正确是手机号");
-        // return false
+        return false;
       } else {
         return true;
       }

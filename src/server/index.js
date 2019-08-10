@@ -25,4 +25,5 @@ export default {
     // 注册
     Register: ($data) => axios.post('register',$data)
 
+    
 }
