@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
     <el-dialog title="登录" :visible.sync="dialogFormVisible" width="30%" center>
       <el-form :model="form">
         <el-form-item label="账号" :label-width="formLabelWidth">
