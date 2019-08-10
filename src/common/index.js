@@ -1,13 +1,13 @@
-import server from'../server'
+import server from '../server'
 
 export default {
-    login: function ($data,vue) {
-        
+    login: function ($data, vue) {
+
         if ($data.name == '' || $data.password == '') {
             vue.$message.error('账号/密码不能为空');
             return
         }
-        var that = vue;
+        var that = this;
         server.Login($data).then(function (response) {
             var $data = response.data
             if ($data.code == 200) {

@@ -27,7 +27,7 @@ export default {
   methods: {
     login: function() {
       let $data = { name: this.input1, password: this.input2 };
-      common.login($data,this);
+      common.login($data, this);
     }
   }
 };

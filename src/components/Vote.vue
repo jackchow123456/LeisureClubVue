@@ -16,7 +16,7 @@
 import server from "../server";
 import LoginWidget from "./widget/Login";
 export default {
-  name:'vote',
+  name: "vote",
   components: {
     LoginWidget
   },
@@ -30,7 +30,6 @@ export default {
   },
   mounted() {
     this.init();
-    
   },
   methods: {
     init: function() {
@@ -46,8 +45,8 @@ export default {
         // 监听socket消息
         this.socket.onmessage = this.getMessage;
       }
-      this.$store.commit('test');
-      
+      this.$store.commit("test");
+
       var that = this;
       // 获取投票结果
       server
@@ -58,7 +57,7 @@ export default {
           that.value2 = $data.data.count.vote_2;
         })
         .catch(function(error) {
-            that.$message.error(error.response.data.message);
+          that.$message.error(error.response.data.message);
         });
     },
     // 投票

@@ -49,9 +49,7 @@ export default {
     };
   },
   methods: {
-    
     login: function() {
-     
       let $data = { name: this.form.name, password: this.form.password };
       common.login($data, this);
       this.dialogFormVisible = false;
