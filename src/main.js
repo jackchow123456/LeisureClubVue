@@ -6,6 +6,7 @@ import store from './store/'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+// vue1 test
 Vue.use(ElementUI)
 
 new Vue({
