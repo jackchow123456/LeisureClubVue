@@ -16,6 +16,11 @@
 
 <script>
 export default {
-  mounted() {}
+  mounted() {
+    Echo.channel('leisure_database_rss')
+        .listen('RssCreatedEvent', (e) => {
+            console.log(e)
+        });
+  }
 };
 </script>

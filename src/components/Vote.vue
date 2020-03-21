@@ -82,7 +82,7 @@ export default {
       // console.log("连接错误");
     },
     getMessage: function(msg) {
-      // console.log("收到服务器信息" + msg.data);
+      console.log("收到服务器信息" + msg.data);
       let index = msg.data.indexOf("[");
       if (index > 0) {
         try {
@@ -92,6 +92,13 @@ export default {
             let result = JSON.parse(data[1]);
             let valueName = "value" + result.id;
             this[valueName] = result.num;
+          }
+
+          if (data[0] == "example") {
+            this.$notify.info({
+              title: "消息",
+              message: data[1]
+            });
           }
         } catch (e) {
           // 忽略报错
